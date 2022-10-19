@@ -13,7 +13,6 @@ add_requires("devkit-a64", "bin2s")
 target("libnx")
     set_basename("nx")
     set_toolchains("aarch64-none-elf@devkit-a64")
-    add_rules("@devkita-a64/base")
     set_kind("static")
     add_packages("bin2s")
     add_defines("LIBNX_NO_DEPRECATION", "__SWITCH__")
@@ -45,6 +44,44 @@ target("libnx")
         os.cp(target:scriptdir() .. "/nx/switch.specs", target:installdir())
         os.cp(target:scriptdir() .. "/nx/switch.ld", target:installdir())
     end)
+    on_package(function(target)
+        local packagedir = "$(buildir)/packages/" .. target:name() .. "/"
+        os.cp(target:targetdir(), packagedir .. "/lib/")
+        os.cp(target:scriptdir() .. "/nx/include", packagedir)
+        os.cp(target:scriptdir() .. "/nx/external/bsd/include", packagedir)
+        os.cp(target:scriptdir() .. "/nx/default_icon.jpg", packagedir)
+        os.cp(target:scriptdir() .. "/nx/switch.specs", packagedir)
+        os.cp(target:scriptdir() .. "/nx/switch.ld", packagedir)
+    end)
+    add_cflags("-g", 
+        --"-Wall", 
+        "-Werror",
+        "-ffunction-sections", 
+        "-fdata-sections", 
+        "-march=armv8-a+crc+crypto", 
+        "-mtune=cortex-a57",
+        "-mtp=soft",
+        "-fPIC", 
+        "-ftls-model=local-exec")
+    add_cxxflags("-g", 
+        --"-Wall", 
+        "-Werror",
+        "-ffunction-sections", 
+        "-fdata-sections", 
+        "-march=armv8-a+crc+crypto", 
+        "-mtune=cortex-a57",
+        "-mtp=soft",
+        "-fPIC", 
+        "-ftls-model=local-exec",
+        "-fno-rtti",
+        "-fno-exceptions",
+        "-std=gnu++11")
+    add_asflags("-g",
+        "-march=armv8-a+crc+crypto", 
+        "-mtune=cortex-a57",
+        "-mtp=soft",
+        "-fPIC", 
+        "-ftls-model=local-exec")
     if is_mode("debug") then
         set_suffixname("d")
     end
