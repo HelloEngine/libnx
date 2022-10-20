@@ -11,7 +11,11 @@ toolchain_end()
 add_repositories("xswitch-repo https://github.com/HelloEngine/xswitch-repo.git main")
 add_requires("devkit-a64", "bin2s")
 target("libnx")
-    set_basename("nx")
+    if is_mode("debug") then
+        set_basename("nxd")
+    else
+        set_basename("nx")
+    end
     set_toolchains("aarch64-none-elf@devkit-a64")
     set_kind("static")
     add_packages("bin2s")
@@ -47,9 +51,6 @@ target("libnx")
         "-mtp=soft",
         "-fPIC", 
         "-ftls-model=local-exec")
-    if is_mode("debug") then
-        set_suffixname("d")
-    end
 
     on_load(function(target)
         assert(is_plat("cross"))
