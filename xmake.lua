@@ -102,14 +102,14 @@ package("libnx")
         package:addenv("LIBNX", package:installdir())
     end)
     
-    on_fetch(function (package)
+    on_fetch("cross@windows", "cross@msys", function (package)
         local result = {}
-        if is_mode("debug") the
+        if is_mode("debug") then
             result.linkdirs = package:installdir("lib/debug")
-            result.links = "libnxd"
+            result.links = "nxd"
         else
             result.linkdirs = package:installdir("lib/release")
-            result.links = "libnx"
+            result.links = "nx"
         end
         result.includedirs = package:installdir("include")
         return result
@@ -120,9 +120,11 @@ package_end()
         io.writefile(packagedir .. "/rules/switch.lua", [[
 rule("switch")
     on_config(function(target)
+        -- target:add("packages", "switch-tools")
+        
         --flags
         target:set("policy", "check.auto_ignore_flags", false)
-        local specs = os.getenv("LIBNX") .. "/switch.specs"
+        local specs = os.getenv("LIBNX") .. "/xswitch.specs"
         local arch = {
             "-march=armv8-a+crc+crypto", 
             "-mtune=cortex-a57", 
