@@ -23,7 +23,7 @@ target("libnx")
     add_files("nx/source/**.s","nx/source/**.c")
     add_includedirs("nx/data/","nx/include/", "nx/include/switch/", "nx/external/bsd/include/")
     add_cflags("-g", 
-        --"-Wall", 
+        "-Wall", 
         "-Werror",
         "-ffunction-sections", 
         "-fdata-sections", 
@@ -33,7 +33,7 @@ target("libnx")
         "-fPIC", 
         "-ftls-model=local-exec")
     add_cxxflags("-g", 
-        --"-Wall", 
+        "-Wall", 
         "-Werror",
         "-ffunction-sections", 
         "-fdata-sections", 
