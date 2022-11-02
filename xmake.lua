@@ -24,7 +24,7 @@ target("libnx")
     add_includedirs("nx/data/","nx/include/", "nx/include/switch/", "nx/external/bsd/include/")
     add_cflags("-g", 
         "-Wall", 
-        "-Werror",
+        --"-Werror",
         "-ffunction-sections", 
         "-fdata-sections", 
         "-march=armv8-a+crc+crypto", 
@@ -34,7 +34,7 @@ target("libnx")
         "-ftls-model=local-exec")
     add_cxxflags("-g", 
         "-Wall", 
-        "-Werror",
+        --"-Werror",
         "-ffunction-sections", 
         "-fdata-sections", 
         "-march=armv8-a+crc+crypto", 
