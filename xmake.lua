@@ -11,6 +11,7 @@ toolchain_end()
 add_repositories("xswitch-repo https://github.com/HelloEngine/xswitch-repo.git main")
 add_requires("devkit-a64", "bin2s")
 target("libnx")
+    set_policy("check.auto_ignore_flags", false)
     if is_mode("debug") then
         set_basename("nxd")
     else
@@ -31,7 +32,9 @@ target("libnx")
         "-mtune=cortex-a57",
         "-mtp=soft",
         "-fPIC", 
-        "-ftls-model=local-exec")
+        "-ftls-model=local-exec",
+        "-MMD", "-MP", "-MF"
+        )
     add_cxxflags("-g", 
         "-Wall", 
         --"-Werror",
@@ -44,17 +47,29 @@ target("libnx")
         "-ftls-model=local-exec",
         "-fno-rtti",
         "-fno-exceptions",
-        "-std=gnu++11")
+        "-std=gnu++11",
+        "-MMD", "-MP", "-MF"
+        )
     add_asflags("-g",
         "-march=armv8-a+crc+crypto", 
         "-mtune=cortex-a57",
         "-mtp=soft",
         "-fPIC", 
-        "-ftls-model=local-exec")
+        "-ftls-model=local-exec",
+        "-MMD", "-MP", "-MF"
+        )
 
     on_load(function(target)
         assert(is_plat("cross"))
         assert(is_host("windows") or is_subhost("msys"))
+
+        if is_mode("debug") then
+            target:add("cflags", "-DDEBUG=1", "-Og")
+            target:add("cxxflags", "-DDEBUG=1", "-Og")
+        else
+            target:add("cflags", "-DDEBUG=1", "-O2")
+            target:add("cxxflags", "-DDEBUG=1", "-O2")
+        end
     end)
 
     on_config(function(target)
@@ -130,14 +145,14 @@ rule("switch")
             "-march=armv8-a+crc+crypto", 
             "-mtune=cortex-a57", 
             "-mtp=soft", 
-            "-fPIE"
+            "-fPIE"，
+            "-MMD", "-MP", "-MF"
         }
         local cflags = {
             "-g", 
             "-Wall", 
             "-O2",
-            "-ffunction-sections",
-            "-MMD", "-MP", "-MF",
+            "-ffunction-sections"
             table.unpack(arch)
         }
         local cxxflags = {
