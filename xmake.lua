@@ -145,14 +145,14 @@ rule("switch")
             "-march=armv8-a+crc+crypto", 
             "-mtune=cortex-a57", 
             "-mtp=soft", 
-            "-fPIE"，
+            "-fPIE",
             "-MMD", "-MP", "-MF"
         }
         local cflags = {
             "-g", 
             "-Wall", 
             "-O2",
-            "-ffunction-sections"
+            "-ffunction-sections",
             table.unpack(arch)
         }
         local cxxflags = {
@@ -175,6 +175,13 @@ rule("switch")
         target:add("asflags", table.unpack(asflags))
         target:add("ldflags", table.unpack(ldflags))
         target:add("defines", "__SWITCH__")
+        if is_mode("debug") then
+            target:add("cflags", "-DDEBUG=1", "-Og")
+            target:add("cxxflags", "-DDEBUG=1", "-Og")
+        else
+            target:add("cflags", "-DDEBUG=1", "-O2")
+            target:add("cxxflags", "-DDEBUG=1", "-O2")
+        end
     end)
 
     on_link(function(target)
