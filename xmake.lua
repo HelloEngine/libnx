@@ -153,23 +153,25 @@ rule("switch")
             "-march=armv8-a+crc+crypto", 
             "-mtune=cortex-a57", 
             "-mtp=soft", 
-            "-fPIE",
-            "-MMD", "-MP", "-MF"
+            "-fPIE"
         }
         local cflags = {
             "-g", 
             "-Wall", 
             "-O2",
             "-ffunction-sections",
+            "-MMD", "-MP", "-MF",
             table.unpack(arch)
         }
         local cxxflags = {
             "-fno-rtti",
             "-fno-exceptions", 
+            "-MMD", "-MP", "-MF",
             table.unpack(cflags)
         }
         local asflags = {
             "-g", 
+            "-MMD", "-MP", "-MF",
             table.unpack(arch)
         }
         local ldflags = {
