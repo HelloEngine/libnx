@@ -140,7 +140,15 @@ rule("switch")
         
         --flags
         target:set("policy", "check.auto_ignore_flags", false)
-        local specs = os.getenv("LIBNX") .. "/xswitch.specs"
+        local libnxPath = os.getenv("LIBNX")
+        if not libnxPath then
+            import("core.project.project")
+            local libnx = project.required_package("libnx")
+            if libnx then
+                libnxPath = libnx:installdir()
+            end
+        end
+        local specs = libnxPath .. "/xswitch.specs"
         local arch = {
             "-march=armv8-a+crc+crypto", 
             "-mtune=cortex-a57", 
